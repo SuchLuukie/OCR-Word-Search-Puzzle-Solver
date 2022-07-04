@@ -1,13 +1,23 @@
 # Import libraries
-from PIL import Image
 
-class OCR:
-    def __init__(self) -> None:
-        img = Image.open("puzzle.jpg")
-        print(self.recognise(img))
 
-    def recognise(self, img):
+class OCR_Model:
+    def __init__(self):
+        # Get dataset
+        # TODO
+
+        # Train model
+        self.train()
+
+        # Validate model
+        self.validate()
+
+
+    def train(self):
+        # TODO
+        return 
+
+
+    def validate(self):
+        # TODO
         return
-
-if __name__ == "__main__":
-    OCR()

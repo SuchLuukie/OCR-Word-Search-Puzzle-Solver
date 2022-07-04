@@ -1,5 +1,5 @@
 # Word Search Solver ML
- Creating an algorithm to solve word search puzzles. (Using custom OCR (Machine learning))
+ Creating an algorithm to solve word search puzzles. (With OCR (Machine learning))
 
 
 # Planning
@@ -16,7 +16,7 @@
 
 # Tasks
 * OCR Model
-    * Obtain dataset used to train the model
+    * Obtain dataset used to train the model (Using Kaggle A-Z dataset)
     * Split dataset in training and testing sets
     * Train and test the model
 
