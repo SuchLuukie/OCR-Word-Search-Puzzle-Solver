@@ -1,10 +1,10 @@
-# Word Search Solver
- Creating an algorithm to solve word search puzzles. (Using OCR as input)
+# Word Search Solver ML
+ Creating an algorithm to solve word search puzzles. (Using custom OCR (Machine learning))
 
 
 # Planning
 * Input
-    Using OCR (Optical Character Recognition) to derive a word search puzzle from either an image or a webcam video.
+    Building and using OCR (Optical Character Recognition) to derive a word search puzzle from either an image or a webcam video.
 
 * Solver
     Creating an algorithm to scan the word search puzzle looking for the given words inside the puzzle.
@@ -13,6 +13,20 @@
     Some word search puzzles contain a sentence or word within the remaining/unused letters in the puzzle.
     Another algorithm is needed to try and solve that list of randomised letters.
 
+
+# Tasks
+* OCR Model
+    * Obtain dataset used to train the model
+    * Split dataset in training and testing sets
+    * Train and test the model
+
+* Input
+    * Get bounding boxes of the letters and process them
+    * Turn the search puzzle into 2D array
+    * Turn the given words into 1D array
+
+* Solver
+    * TODO
 
 # Showcase
 
