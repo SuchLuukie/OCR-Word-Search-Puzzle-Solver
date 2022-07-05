@@ -1,15 +1,15 @@
 # Word Search Solver ML
- Creating an algorithm to solve word search puzzles. (With OCR (Machine learning))
+ Creating an OCR model to create a word search puzzle solver
 
 
 # Planning
-* Input
+* Input <br>
     Building and using OCR (Optical Character Recognition) to derive a word search puzzle from either an image or a webcam video.
 
-* Solver
+* Solver <br>
     Creating an algorithm to scan the word search puzzle looking for the given words inside the puzzle.
 
-* Remaining letters
+* Remaining letters <br>
     Some word search puzzles contain a sentence or word within the remaining/unused letters in the puzzle.
     Another algorithm is needed to try and solve that list of randomised letters.
 
