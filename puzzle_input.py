@@ -29,6 +29,9 @@ class PuzzleInput:
         contours, word_contours = self.extract_word_contours(contours)
         board = self.extract_board(contours)
 
+        self.visualise(self.image.copy(), [i for row in board for i in row])
+        self.visualise(self.image.copy(), [j for word in word_contours for j in word])
+
         # Now use OCR to determine what letters the contours are
         #TODO
 
@@ -166,7 +169,7 @@ class PuzzleInput:
         for idx, contour in enumerate(contours):
             x, y, w, h = contour
             cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 2)
-            cv2.putText(self.image, str(idx), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
+            #cv2.putText(self.image, str(idx), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
 
         cv2.imshow("img", image)
         cv2.waitKey()
