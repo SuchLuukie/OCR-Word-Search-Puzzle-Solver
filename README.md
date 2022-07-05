@@ -1,5 +1,5 @@
-# Word Search Solver ML
- Creating an OCR model to create a word search puzzle solver
+# OCR Word search puzzle solver
+ Creating an OCR model to create a word search puzzle solver.
 
 
 # Planning
