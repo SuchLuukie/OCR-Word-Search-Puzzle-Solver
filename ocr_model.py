@@ -1,6 +1,6 @@
 # Import libraries
-
+import pytesseract
 
 class OCR_Model:
     def recognise(self, image):
-        return
+        return pytesseract.image_to_string(image)

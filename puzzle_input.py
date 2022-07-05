@@ -1,15 +1,22 @@
 # Import libraries
 import cv2
+import numpy as np
 from itertools import permutations
+
+# Import files
+from ocr_model import OCR_Model
+
 
 class PuzzleInput:
     def __init__(self):
+        self.OCR = OCR_Model()
+
         # Get image and convert to grayscale (To be safe)
-        self.image = cv2.imread('puzzles/puzzle1.jpg')
+        self.image = cv2.imread('puzzles/puzzle0.jpg')
         self.gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         self.image_area = self.image.shape[0] * self.image.shape[1]
 
-        # Letter spacing range
+        # Letter spacing range for words
         self.lsr = self.image.shape[0] * 0.04
 
         # Extract the puzzle from the image
@@ -25,11 +32,16 @@ class PuzzleInput:
         contours, word_contours = self.extract_word_contours(contours)
         board = self.extract_board(contours)
 
-        self.visualise(self.image.copy(), [i for row in board for i in row])
-        self.visualise(self.image.copy(), [j for word in word_contours for j in word])
+        for row in board:
+            # Get all the images from the contours
+            images = [self.get_image_from_contour(img, cell) for cell in row]
 
-        # Now use OCR to determine what letters the contours are
-        #TODO
+            # Combine them horizontally for better OCR results
+            combined = np.concatenate(images, axis=1)
+
+            # Now use OCR to determine what letters the contours are
+            result = self.OCR.recognise(combined)
+            print(result.split())
 
 
     # Extracts words and removes them from contour
@@ -117,8 +129,19 @@ class PuzzleInput:
 
 
     def get_image_from_contour(self, img, contour):
+        padding = 10
+
         x, y, w, h = contour
         image = img[y:y+h, x:x+w]
+
+
+        # Add whitspace around image and resize
+        image = cv2.copyMakeBorder(image, padding, padding, padding, padding, cv2.BORDER_ISOLATED, value=255)
+        image = cv2.resize(image, (200, 200))
+
+        # Apply treshold
+        image = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
+
         return image
         
 
@@ -169,3 +192,6 @@ class PuzzleInput:
 
         cv2.imshow("img", image)
         cv2.waitKey()
+
+if __name__ == "__main__":
+    PuzzleInput()
