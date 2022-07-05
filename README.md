@@ -1,5 +1,6 @@
 # OCR Word search puzzle solver
  Creating a model that uses OCR to detect word search puzzles and solves them.
+ (Using tesseract https://github.com/UB-Mannheim/tesseract/wiki)
 
 
 # Planning
