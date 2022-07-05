@@ -1,5 +1,6 @@
 # Import libraries
 import cv2
+import sys
 import numpy as np
 from itertools import permutations
 
@@ -17,7 +18,7 @@ class PuzzleInput:
         self.image_area = self.image.shape[0] * self.image.shape[1]
 
         # Letter spacing range for words
-        self.lsr = self.image.shape[0] * 0.04
+        self.lsr = self.image.shape[0] * 0.02
 
         # Extract the puzzle from the image
         self.extract_puzzle(self.gray)
@@ -27,6 +28,7 @@ class PuzzleInput:
     def extract_puzzle(self, img):
         # Get the contours of the letters
         contours = self.extract_contours(img)
+        self.visualise(self.image, contours)
 
         # Now determine which are letters and words
         contours, word_contours = self.extract_word_contours(contours)
@@ -41,7 +43,10 @@ class PuzzleInput:
 
             # Now use OCR to determine what letters the contours are
             result = self.OCR.recognise(combined)
-            print(result.split())
+
+            # Some post processing for cleaner result
+            result = "".join(result.split())
+            print(result)
 
 
     # Extracts words and removes them from contour
@@ -81,33 +86,37 @@ class PuzzleInput:
 
     # Extracts letters
     def extract_board(self, contours):
-        matches = []
-        # We check if it's a word when the contours collide with eachother
-        for contour1, contour2 in permutations(contours, 2):
-            combo = [contour1, contour2]
-            if self.check_if_horizontal_match(contour1, contour2):
-                if not combo in matches and not list(reversed(combo)) in matches:
-                    matches.append([contour1, contour2])
+        try:
+            matches = []
+            # We check if it's a word when the contours collide with eachother
+            for contour1, contour2 in permutations(contours, 2):
+                combo = [contour1, contour2]
+                if self.check_if_horizontal_match(contour1, contour2):
+                    if not combo in matches and not list(reversed(combo)) in matches:
+                        matches.append([contour1, contour2])
 
-        board = []
-        row = [matches[0][0]]
-        for match in matches:
-            if match[0] in row:
-                if not match[1] in row:
-                    row.append(match[1])
+            board = []
+            row = [matches[0][0]]
+            for match in matches:
+                if match[0] in row:
+                    if not match[1] in row:
+                        row.append(match[1])
 
-            else:
-                board.append(row)
-                row = match
+                else:
+                    board.append(row)
+                    row = match
 
-        # To add the last row
-        board.append(row)
+            # To add the last row
+            board.append(row)
 
-        # Sort rows by X to ensure proper sequence
-        for row in board:
-            row.sort(key=lambda filler:filler[0])
+            # Sort rows by X to ensure proper sequence
+            for row in board:
+                row.sort(key=lambda filler:filler[0])
 
-        return board
+            return board
+
+        except (ValueError, IndexError):
+            sys.exit("No words were found! Make sure you're using the correct image. Otherwise try and adjusting word letter spacing.")
 
 
     def check_if_word_letter(self, rect1, rect2):
@@ -130,10 +139,8 @@ class PuzzleInput:
 
     def get_image_from_contour(self, img, contour):
         padding = 10
-
         x, y, w, h = contour
         image = img[y:y+h, x:x+w]
-
 
         # Add whitspace around image and resize
         image = cv2.copyMakeBorder(image, padding, padding, padding, padding, cv2.BORDER_ISOLATED, value=255)
