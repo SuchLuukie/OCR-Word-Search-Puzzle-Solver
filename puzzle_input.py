@@ -2,10 +2,6 @@
 import cv2
 from itertools import permutations
 
-from numpy import array
-
-# https://stackoverflow.com/questions/60515216/extracting-and-saving-characters-from-an-image
-
 class PuzzleInput:
     def __init__(self):
         # Get image and convert to grayscale (To be safe)
@@ -173,7 +169,3 @@ class PuzzleInput:
 
         cv2.imshow("img", image)
         cv2.waitKey()
-
-
-if __name__ == "__main__":
-    PuzzleInput()
