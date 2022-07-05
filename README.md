@@ -22,7 +22,9 @@
     * Turn the given words into 1D array
     
 * OCR
-    * Use the images from the input and determine the letters.
+    * Use the images from the input and treshold them
+    * Apply some post processing to ensure higher quality results
+    * Use the OCR model (Tesseract) to identify the letters
 
 * Solver
     * TODO
