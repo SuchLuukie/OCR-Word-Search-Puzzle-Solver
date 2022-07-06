@@ -18,7 +18,7 @@ class PuzzleInput:
         self.image_area = self.image.shape[0] * self.image.shape[1]
 
         # Letter spacing range for words
-        self.lsr = self.image.shape[0] * 0.02
+        self.lsr = self.image.shape[0] * 0.04
 
         # Extract the puzzle from the image
         self.extract_puzzle(self.gray)
@@ -28,15 +28,54 @@ class PuzzleInput:
     def extract_puzzle(self, img):
         # Get the contours of the letters
         contours = self.extract_contours(img)
-        self.visualise(self.image, contours)
 
         # Now determine which are letters and words
         contours, word_contours = self.extract_word_contours(contours)
-        board = self.extract_board(contours)
+        self.visualise(self.image, word_contours)
+        board_contours = self.extract_board(contours)
 
-        for row in board:
+        board = []
+        all_combined = []
+        for row in board_contours:
             # Get all the images from the contours
             images = [self.get_image_from_contour(img, cell) for cell in row]
+
+            # Combine them horizontally for better OCR results
+            combined = np.concatenate(images, axis=1)
+            all_combined.append(combined)
+
+            # Now use OCR to determine what letters the contours are
+            result = self.OCR.recognise(combined)
+
+            # Some post processing for cleaner result
+            result = "".join(result.split())
+
+            # Add this row to the board
+            board.append(list(result))
+
+
+        # Sometimes with this OCR Engine it sees a T in the letter I
+        # This then adds them together in the combo as TI
+        # Using this crude method below it checks the average of the row len
+        # to detect if something's off and then looks for the TI combination
+        avg_row_len = sum(len(row) for row in board) / len(board)
+        for row in board:
+            # Check if this row is longer than average
+            if len(row) > avg_row_len:
+                seq = ["T", "I"]
+                try:
+                    # It then looks for the combination of TI in the row
+                    T_index = [(i, i+len(seq)) for i in range(len(row)) if row[i:i+len(seq)] == seq][0][0]
+                    # It then deletes it, if something is off and it doesn't work it exits the program
+                    del row[T_index]
+
+                except IndexError:
+                    sys.exit("Something went wrong while reading the board!")
+
+        words = []
+        for word in word_contours:
+            # Get all the images from the contours
+            images = [self.get_image_from_contour(img, letter) for letter in word]
 
             # Combine them horizontally for better OCR results
             combined = np.concatenate(images, axis=1)
@@ -46,7 +85,14 @@ class PuzzleInput:
 
             # Some post processing for cleaner result
             result = "".join(result.split())
-            print(result)
+            words.append(result)
+
+        for word in words:
+            print(word)
+
+        # Data feedback
+        for row in board:
+            print(row)
 
 
     # Extracts words and removes them from contour
@@ -144,10 +190,11 @@ class PuzzleInput:
 
         # Add whitspace around image and resize
         image = cv2.copyMakeBorder(image, padding, padding, padding, padding, cv2.BORDER_ISOLATED, value=255)
-        image = cv2.resize(image, (200, 200))
 
         # Apply treshold
-        image = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
+        image = cv2.threshold(image, 140, 255, cv2.THRESH_OTSU)[1]
+
+        image = cv2.resize(image, (50, 50))
 
         return image
         
@@ -192,10 +239,11 @@ class PuzzleInput:
 
     # Visualise the contours onto the image
     def visualise(self, image, contours):
-        for idx, contour in enumerate(contours):
-            x, y, w, h = contour
-            cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 2)
-            #cv2.putText(self.image, str(idx), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
+        for c in contours:
+            for idx, contour in enumerate(c):
+                x, y, w, h = contour
+                cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 2)
+                cv2.putText(self.image, str(idx), (x, y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (36,255,12), 2)
 
         cv2.imshow("img", image)
         cv2.waitKey()
