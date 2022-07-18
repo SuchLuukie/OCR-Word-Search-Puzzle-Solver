@@ -29,8 +29,5 @@
 * Solver
     * TODO
 
-# Showcase
-
-
 # What I've learned
-
+I'm currently postboning this project, I've tweaked and worked on the OCR and image proccesing side of this and currently in this state it's not accurate enough to start solving word search puzzles with it. I've learned quite a bit on image processing using contrats, tresholds, etc.
