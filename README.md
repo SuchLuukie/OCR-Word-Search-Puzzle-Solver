@@ -35,5 +35,7 @@ I'm currently postboning this project, I've tweaked and worked on the OCR and im
 I'll be working on the puzzle solving side of things on a different repository. 
 
 
-# What the script extracts. This is what the OCR model receives, the model is not accurate enough to proceed with this project.
+# What the script extracts. 
+This is what the OCR model receives, for some reason unknown to me tesseract has trouble accurately extracting characters from this input.
+
 <img src="/showcase/showcase.png"/>
