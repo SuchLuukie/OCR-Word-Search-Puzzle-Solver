@@ -36,4 +36,4 @@ I'll be working on the puzzle solving side of things on a different repository.
 
 
 # What the script extracts. This is what the OCR model receives, the model is not accurate enough to proceed with this project.
-<img src="/showcase/showcase.png" width="360" height="240"/>
+<img src="/showcase/showcase.png"/>
