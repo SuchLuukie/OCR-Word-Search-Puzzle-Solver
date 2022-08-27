@@ -33,3 +33,7 @@
 I'm currently postboning this project, I've tweaked and worked on the OCR and image proccesing side of this and currently in this state it's not accurate enough to start solving word search puzzles with it. I've learned quite a bit on image processing using contrats, tresholds, etc.
 
 I'll be working on the puzzle solving side of things on a different repository. 
+
+
+# What the script extracts. This is what the OCR model receives, the model is not accurate enough to proceed with this project.
+<img src="/showcase/showcase.png" width="360" height="240"/>
